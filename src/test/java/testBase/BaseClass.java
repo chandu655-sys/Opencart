@@ -15,8 +15,11 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -46,41 +49,27 @@ public Properties p;
 				
 		logger=LogManager.getLogger(this.getClass());  //lOG4J2
 				
-		if(p.getProperty("execution_env").equalsIgnoreCase("remote"))
-		{
-			DesiredCapabilities capabilities=new DesiredCapabilities();
-			
-			//os
-			if(os.equalsIgnoreCase("windows"))
-			{
-				capabilities.setPlatform(Platform.WIN11);
-			}
-			else if(os.equalsIgnoreCase("linux"))
-			{
-				capabilities.setPlatform(Platform.LINUX);
-				
-			}
-			else if (os.equalsIgnoreCase("mac"))
-			{
-				capabilities.setPlatform(Platform.MAC);
-			}
-			else
-			{
-				System.out.println("No matching os");
-				return;
-			}
-			
-			//browser
-			switch(br.toLowerCase())
-			{
-			case "chrome": capabilities.setBrowserName("chrome"); break;
-			case "edge": capabilities.setBrowserName("MicrosoftEdge"); break;
-			case "firefox": capabilities.setBrowserName("firefox"); break;
-			default: System.out.println("No matching browser"); return;
-			}
-			
-			driver=new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"),capabilities);
-		}
+		 if (p.getProperty("execution_env").equalsIgnoreCase("remote")) {
+		        if (br.equalsIgnoreCase("chrome")) {
+		            ChromeOptions options = new ChromeOptions();
+		            options.setCapability("platformName", "Windows");
+		            driver = new RemoteWebDriver(new URL("http://localhost:4444/"), options);
+
+		        } else if (br.equalsIgnoreCase("edge")) {
+		            EdgeOptions options = new EdgeOptions();
+		            options.setCapability("platformName", "Windows");
+		            driver = new RemoteWebDriver(new URL("http://localhost:4444/"), options);
+
+		        } else if (br.equalsIgnoreCase("firefox")) {
+		            FirefoxOptions options = new FirefoxOptions();
+		            options.setCapability("platformName", "Windows");
+		            driver = new RemoteWebDriver(new URL("http://localhost:4444/"), options);
+
+		        } else {
+		            System.out.println("No matching browser for remote execution");
+		            return;
+		        }
+		 }
 		
 				
 		if(p.getProperty("execution_env").equalsIgnoreCase("local"))
